@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final List<int> completedWeeks = [51, 50, 49];
+  final List<int> completedWeeks = [52, 50, 49];
 
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -148,12 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final _calendarCarouselNoHeader = CalendarCarousel<Event>(
       markedDatesMap: _markedDateMap,
-      todayBorderColor: Colors.deepOrange,
+      todayBorderColor: Colors.black,
       todayButtonColor: Colors.amber,
       selectedDateTime: _currentDate2,
       completedWeeks: completedWeeks,
       weekDayFormat: WeekdayFormat.narrow,
       locale: Platform.localeName,
+      hasCarouselHeader: true,
       selectedDayButtonColor: Colors.pink,
       selectedDayTextStyle: TextStyle(color: Colors.white),
       daysTextStyle: TextStyle(color: Colors.grey),
@@ -183,7 +184,43 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.greenAccent,
             padding: EdgeInsets.only(bottom: 10),
             margin: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _calendarCarouselNoHeader,
+            child: Column(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.calendar_today,
+                    color: Colors.deepOrange,
+                    size: 25.0,
+                  ),
+                  onPressed: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900, 1, 1),
+                      lastDate: DateTime.now().add(Duration(days: 3640)),
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            primaryColor: Colors.deepOrange,
+                            colorScheme: ColorScheme.light(
+                              primary: Colors.greenAccent,
+                            ),
+                          ),
+                          child: child ?? Container(),
+                        );
+                      },
+                    ).then((value) async {
+                      if (value != null) {
+                        setState(() {
+                          _currentDate2 = value;
+                        });
+                      }
+                    });
+                  },
+                ),
+                _calendarCarouselNoHeader,
+              ],
+            ),
           ),
         ));
   }

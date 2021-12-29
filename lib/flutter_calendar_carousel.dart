@@ -300,9 +300,11 @@ class _CalendarState<T extends EventInterface>
 
     _setDate();
 
-    if(selectedDateTime != null && _dates.isNotEmpty) {
+    if (selectedDateTime != null && _dates.isNotEmpty) {
       _dates.asMap().forEach((index, element) {
-        if(element.day == selectedDateTime.day && element.month == selectedDateTime.month && element.year == selectedDateTime.year) {
+        if (element.day == selectedDateTime.day &&
+            element.month == selectedDateTime.month &&
+            element.year == selectedDateTime.year) {
           _pageNum = index;
         }
       });
@@ -517,8 +519,15 @@ class _CalendarState<T extends EventInterface>
     DateTime now,
   ) {
     final markedDatesMap = widget.markedDatesMap;
+    Color todayBorderColor =
+        isToday ? widget.todayBorderColor : Colors.transparent;
+    double todayBorderWidth = isToday ? 1 : 0;
 
     BoxDecoration mDecoration = BoxDecoration(
+        border: Border.all(
+          width: todayBorderWidth,
+          color: todayBorderColor,
+        ),
         color:
             isSelectedDay ? widget.selectedDayButtonColor : Colors.transparent);
 
@@ -532,9 +541,7 @@ class _CalendarState<T extends EventInterface>
               case 7:
                 mDecoration = BoxDecoration(
                     border: Border.all(
-                        color: isToday
-                            ? widget.todayBorderColor
-                            : Colors.transparent),
+                        width: todayBorderWidth, color: todayBorderColor),
                     color: isSelectedDay
                         ? widget.selectedDayButtonColor
                         : widget.markedWeekColor,
@@ -545,9 +552,7 @@ class _CalendarState<T extends EventInterface>
               case 6:
                 mDecoration = BoxDecoration(
                     border: Border.all(
-                        color: isToday
-                            ? widget.todayBorderColor
-                            : Colors.transparent),
+                        width: todayBorderWidth, color: todayBorderColor),
                     color: isSelectedDay
                         ? widget.selectedDayButtonColor
                         : widget.markedWeekColor,
@@ -558,9 +563,7 @@ class _CalendarState<T extends EventInterface>
               default:
                 mDecoration = BoxDecoration(
                     border: Border.all(
-                        color: isToday
-                            ? widget.todayBorderColor
-                            : Colors.transparent),
+                        width: todayBorderWidth, color: todayBorderColor),
                     color: isSelectedDay
                         ? widget.selectedDayButtonColor
                         : widget.markedWeekColor);
@@ -569,6 +572,7 @@ class _CalendarState<T extends EventInterface>
         }
       }
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: GestureDetector(
@@ -703,13 +707,43 @@ class _CalendarState<T extends EventInterface>
                     DateTime.now().day == index + 1 - _startWeekday &&
                         DateTime.now().month == month &&
                         DateTime.now().year == year;
-                bool isSelectedDay = selectedDateTime != null &&
-                    selectedDateTime.year == year &&
-                    selectedDateTime.month == month &&
-                    selectedDateTime.day == index + 1 - _startWeekday;
+
                 bool isPrevMonthDay = index < _startWeekday;
                 bool isNextMonthDay =
-                    index >= (DateTime(year, month + 1, 0).day) + _startWeekday;
+                    index >= (DateTime(year, month, 0).day) + _startWeekday;
+
+                int currentYear = year;
+                int currentMonth = month;
+                int currentDay = index + 1 - _startWeekday;
+                int lastMonthDay = DateTime(year, month + 1, 0).day;
+
+                if (currentDay < 1 || currentDay > lastMonthDay) {
+                  if (currentDay < 1) {
+                    currentMonth--;
+                    if (currentMonth < 1) {
+                      currentYear--;
+                      currentMonth = 12;
+                    }
+                    lastMonthDay = DateTime(year, currentMonth + 1, 0).day;
+                    currentDay = lastMonthDay + currentDay;
+                  }
+
+                  if (currentDay > lastMonthDay) {
+                    currentMonth++;
+                    if (currentMonth > 12) {
+                      currentYear++;
+                      currentMonth = 1;
+                    }
+                    currentDay = currentDay - lastMonthDay;
+                    lastMonthDay = DateTime(year, currentMonth + 1, 0).day;
+                  }
+                }
+
+                bool isSelectedDay = selectedDateTime != null &&
+                    selectedDateTime.year == currentYear &&
+                    selectedDateTime.month == currentMonth &&
+                    selectedDateTime.day == currentDay;
+
                 bool isThisMonthDay = !isPrevMonthDay && !isNextMonthDay;
 
                 DateTime now = DateTime(year, month, 1);
