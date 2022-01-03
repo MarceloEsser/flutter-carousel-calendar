@@ -113,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _currentDate2 = DateTime.now();
+    _targetDateTime = DateTime.now();
+
     widget.completedWeeks.forEach((element) {
       DateTime subtractedDateTime = Jiffy(DateTime.now())
           .subtract(weeks: weekNumber(DateTime.now()) - element)
@@ -141,11 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     final _calendarCarouselNoHeader = CalendarCarousel<Event>(
       markedDatesMap: _markedDateMap,
       todayBorderColor: Colors.black,
@@ -154,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
       completedWeeks: completedWeeks,
       weekDayFormat: WeekdayFormat.narrow,
       locale: Platform.localeName,
-      hasCarouselHeader: true,
+      targetDateTime: _targetDateTime,
       selectedDayButtonColor: Colors.pink,
       selectedDayTextStyle: TextStyle(color: Colors.white),
       daysTextStyle: TextStyle(color: Colors.grey),
@@ -163,7 +162,20 @@ class _MyHomePageState extends State<MyHomePage> {
       onDayPressed: (date, events) {
         this.setState(() => _currentDate2 = date);
       },
-      height: 550.0,
+      hasCarouselHeader: true,
+      boxDecoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 3,
+              blurRadius: 32,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ]),
+      height: 430.0,
+      width: 370,
       onCalendarChanged: (DateTime date) {
         this.setState(() {
           _targetDateTime = date;
@@ -213,6 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (value != null) {
                         setState(() {
                           _currentDate2 = value;
+                          _targetDateTime = value;
                         });
                       }
                     });

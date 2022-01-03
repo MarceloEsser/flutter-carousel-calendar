@@ -56,6 +56,7 @@ typedef Widget? DayBuilder(
 typedef Widget WeekdayBuilder(int weekday, String weekdayName);
 
 class CalendarCarousel<T extends EventInterface> extends StatefulWidget {
+  final BoxDecoration boxDecoration;
   final double viewportFraction;
   final TextStyle? prevDaysTextStyle;
   final TextStyle? daysTextStyle;
@@ -64,7 +65,7 @@ class CalendarCarousel<T extends EventInterface> extends StatefulWidget {
   final Color thisMonthDayBorderColor;
   final Color nextMonthDayBorderColor;
   final double dayPadding;
-  final double height;
+  double height;
   final double width;
   final TextStyle? todayTextStyle;
   final Color dayButtonColor;
@@ -156,6 +157,7 @@ class CalendarCarousel<T extends EventInterface> extends StatefulWidget {
 
   CalendarCarousel({
     Key? key,
+    this.boxDecoration = const BoxDecoration(),
     this.markedWeekColor = Colors.cyan,
     this.completedWeeks,
     this.headerHighlightDateColor = Colors.deepPurple,
@@ -258,7 +260,7 @@ enum WeekdayFormat {
 }
 
 class _CalendarState<T extends EventInterface>
-    extends State<CalendarCarousel<T>> {
+    extends State<CalendarCarousel<T>> with TickerProviderStateMixin {
   late PageController _controller;
   late List<DateTime> _dates;
   late List<List<DateTime>> _weeks;
@@ -270,10 +272,14 @@ class _CalendarState<T extends EventInterface>
   int _pageNum = 0;
   late DateTime minDate;
   late DateTime maxDate;
+  late double _height;
 
   /// When FIRSTDAYOFWEEK is 0 in dart-intl, it represents Monday. However it is the second day in the arrays of Weekdays.
   /// Therefore we need to add 1 modulo 7 to pick the right weekday from intl. (cf. [GlobalMaterialLocalizations])
   late int firstDayOfWeek;
+
+  late AnimationController _calendarSizeController;
+  late Animation<double> _calendarSizeAnimation;
 
   /// If the setState called from this class, don't reload the selectedDate, but it should reload selected date if called from external class
 
@@ -310,6 +316,10 @@ class _CalendarState<T extends EventInterface>
       });
     }
 
+    _height = widget.height;
+
+    _calendarHeightAnimations();
+
     _controller = PageController(
       initialPage: this._pageNum,
       keepPage: true,
@@ -320,6 +330,8 @@ class _CalendarState<T extends EventInterface>
   @override
   void didUpdateWidget(CalendarCarousel<T> oldWidget) {
     if (widget.targetDateTime != null && widget.targetDateTime != _targetDate) {
+      targetDateTimeTravelControl();
+      _setDatesAndWeeks();
       _init();
       _setDate(_pageNum);
     }
@@ -327,10 +339,35 @@ class _CalendarState<T extends EventInterface>
     super.didUpdateWidget(oldWidget);
   }
 
+  void targetDateTimeTravelControl() {
+    if (widget.targetDateTime != null) {
+      _targetDate = widget.targetDateTime ?? DateTime.now();
+      if (_targetDate.isBefore(minDate)) {
+        minDate = DateTime(
+            _targetDate.year - 1, _targetDate.month, _targetDate.day);
+      }
+      if (_targetDate.isAfter(maxDate)) {
+        maxDate = DateTime(
+            _targetDate.year + 1, _targetDate.month, _targetDate.day);
+      }
+    }
+  }
+
   @override
   dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _calendarHeightAnimations() {
+    _calendarSizeController = AnimationController(
+        duration: const Duration(milliseconds: 350), vsync: this);
+    _calendarSizeAnimation = CurvedAnimation(
+      parent: _calendarSizeController,
+      curve: Curves.ease,
+    );
+
+    _calendarSizeController.forward();
   }
 
   _init() {
@@ -357,41 +394,49 @@ class _CalendarState<T extends EventInterface>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      child: Column(
-        children: <Widget>[
-          buildCalendarHeader(),
-          Container(
-            margin: EdgeInsets.only(top: 30),
-            child: WeekdayRow(
-              firstDayOfWeek,
-              widget.customWeekDayBuilder,
-              showWeekdays: widget.showWeekDays,
-              weekdayFormat: widget.weekDayFormat,
-              weekdayMargin: widget.weekDayMargin,
-              weekdayPadding: widget.weekDayPadding,
-              weekdayBackgroundColor: widget.weekDayBackgroundColor,
-              weekdayTextStyle: widget.weekdayTextStyle,
-              localeDate: _localeDate,
+    return SizeTransition(
+      sizeFactor: _calendarSizeAnimation,
+      axis: Axis.vertical,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+        decoration: widget.boxDecoration,
+        width: widget.width,
+        height: _height,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: buildCalendarHeader(),
             ),
-          ),
-          Expanded(
-              child: PageView.builder(
-            itemCount: this._dates.length,
-            onPageChanged: (index) {
-              _pageNum = index;
-              this._setDate(index);
-            },
-            controller: _controller,
-            itemBuilder: (context, index) {
-              log(index.toString());
-              _pageNum = index;
-              return builder(index);
-            },
-          )),
-        ],
+            Container(
+              child: WeekdayRow(
+                firstDayOfWeek,
+                widget.customWeekDayBuilder,
+                showWeekdays: widget.showWeekDays,
+                weekdayFormat: widget.weekDayFormat,
+                weekdayMargin: widget.weekDayMargin,
+                weekdayPadding: widget.weekDayPadding,
+                weekdayBackgroundColor: widget.weekDayBackgroundColor,
+                weekdayTextStyle: widget.weekdayTextStyle,
+                localeDate: _localeDate,
+              ),
+            ),
+            Expanded(
+                child: PageView.builder(
+              itemCount: this._dates.length,
+              onPageChanged: (index) {
+                _pageNum = index;
+                this._setDate(index);
+              },
+              controller: _controller,
+              itemBuilder: (context, index) {
+                log(index.toString());
+                _pageNum = index;
+                return builder(index);
+              },
+            )),
+          ],
+        ),
       ),
     );
   }
@@ -701,6 +746,15 @@ class _CalendarState<T extends EventInterface>
               crossAxisCount: 7,
               childAspectRatio: widget.childAspectRatio,
               children: List.generate(totalItemCount, (index) {
+                if (totalItemCount < 42) {
+                  _height = widget.height - 50;
+                  _calendarSizeController.forward();
+                } else {
+                  _calendarSizeController.forward();
+                  _height = widget.height;
+                }
+
+                log(totalItemCount.toString());
                 final selectedDateTime = widget.selectedDateTime;
 
                 bool isToday =

@@ -37,7 +37,7 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
   @override
   void initState() {
     mPagerController = new PageController(
-        initialPage: widget.selectedIndex, viewportFraction: 0.35);
+        initialPage: widget.selectedIndex, viewportFraction: 0.37);
     super.initState();
   }
 
@@ -59,15 +59,14 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
-      height: 40,
+      height: 50,
       child: Stack(
         children: [
           Center(
             child: Container(
-              margin: EdgeInsets.only(bottom: 5),
+              margin: EdgeInsets.only(bottom: 10),
               width: 170,
-              height: 35,
+              height: 45,
               decoration: BoxDecoration(
                 color: widget.selectedDateColor,
                 borderRadius: BorderRadius.circular(50),
@@ -81,6 +80,7 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
                   widget.pageChangeListener(selectedIndex);
                 }
               },
+
               itemCount: widget.dates.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -129,7 +129,7 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
 
   Widget selectedDateHeader(String formattedDate) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Center(
         child: Text(
           formattedDate,
