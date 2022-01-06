@@ -343,12 +343,12 @@ class _CalendarState<T extends EventInterface>
     if (widget.targetDateTime != null) {
       _targetDate = widget.targetDateTime ?? DateTime.now();
       if (_targetDate.isBefore(minDate)) {
-        minDate = DateTime(
-            _targetDate.year - 1, _targetDate.month, _targetDate.day);
+        minDate =
+            DateTime(_targetDate.year - 1, _targetDate.month, _targetDate.day);
       }
       if (_targetDate.isAfter(maxDate)) {
-        maxDate = DateTime(
-            _targetDate.year + 1, _targetDate.month, _targetDate.day);
+        maxDate =
+            DateTime(_targetDate.year + 1, _targetDate.month, _targetDate.day);
       }
     }
   }
@@ -397,45 +397,48 @@ class _CalendarState<T extends EventInterface>
     return SizeTransition(
       sizeFactor: _calendarSizeAnimation,
       axis: Axis.vertical,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-        decoration: widget.boxDecoration,
-        width: widget.width,
-        height: _height,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15.0),
-              child: buildCalendarHeader(),
-            ),
-            Container(
-              child: WeekdayRow(
-                firstDayOfWeek,
-                widget.customWeekDayBuilder,
-                showWeekdays: widget.showWeekDays,
-                weekdayFormat: widget.weekDayFormat,
-                weekdayMargin: widget.weekDayMargin,
-                weekdayPadding: widget.weekDayPadding,
-                weekdayBackgroundColor: widget.weekDayBackgroundColor,
-                weekdayTextStyle: widget.weekdayTextStyle,
-                localeDate: _localeDate,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+          decoration: widget.boxDecoration,
+          width: widget.width,
+          height: _height,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: buildCalendarHeader(),
               ),
-            ),
-            Expanded(
-                child: PageView.builder(
-              itemCount: this._dates.length,
-              onPageChanged: (index) {
-                _pageNum = index;
-                this._setDate(index);
-              },
-              controller: _controller,
-              itemBuilder: (context, index) {
-                log(index.toString());
-                _pageNum = index;
-                return builder(index);
-              },
-            )),
-          ],
+              Container(
+                child: WeekdayRow(
+                  firstDayOfWeek,
+                  widget.customWeekDayBuilder,
+                  showWeekdays: widget.showWeekDays,
+                  weekdayFormat: widget.weekDayFormat,
+                  weekdayMargin: widget.weekDayMargin,
+                  weekdayPadding: widget.weekDayPadding,
+                  weekdayBackgroundColor: widget.weekDayBackgroundColor,
+                  weekdayTextStyle: widget.weekdayTextStyle,
+                  localeDate: _localeDate,
+                ),
+              ),
+              Expanded(
+                  child: PageView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: this._dates.length,
+                onPageChanged: (index) {
+                  _pageNum = index;
+                  this._setDate(index);
+                },
+                controller: _controller,
+                itemBuilder: (context, index) {
+                  log(index.toString());
+                  _pageNum = index;
+                  return builder(index);
+                },
+              )),
+            ],
+          ),
         ),
       ),
     );
@@ -569,6 +572,7 @@ class _CalendarState<T extends EventInterface>
     double todayBorderWidth = isToday ? 1 : 0;
 
     BoxDecoration mDecoration = BoxDecoration(
+        shape: BoxShape.circle,
         border: Border.all(
           width: todayBorderWidth,
           color: todayBorderColor,
@@ -742,7 +746,7 @@ class _CalendarState<T extends EventInterface>
             width: double.infinity,
             height: double.infinity,
             child: GridView.count(
-              physics: widget.customGridViewPhysics,
+              physics: NeverScrollableScrollPhysics(),
               crossAxisCount: 7,
               childAspectRatio: widget.childAspectRatio,
               children: List.generate(totalItemCount, (index) {

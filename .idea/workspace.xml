@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8dbbcbcb-6c13-4d16-b7ff-9a28942ab345" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="8dbbcbcb-6c13-4d16-b7ff-9a28942ab345" name="Default Changelist" comment="better calendar height and minDate/maxDate selection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" afterDir="false" />
     </list>
@@ -76,6 +74,14 @@
       <option name="presentableId" value="Default" />
       <updated>1640017865568</updated>
     </task>
+    <task id="LOCAL-00001" summary="better calendar height and minDate/maxDate selection">
+      <created>1641216175934</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1641216175934</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -90,15 +96,12 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="better calendar height and minDate/maxDate selection" />
+    <option name="LAST_COMMIT_MESSAGE" value="better calendar height and minDate/maxDate selection" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/flutter_calendar_carousel.dart</url>
-          <line>388</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint suspend="THREAD" type="dart-exception" />
       </default-breakpoints>

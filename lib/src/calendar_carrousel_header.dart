@@ -50,8 +50,7 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
   @override
   void didUpdateWidget(covariant CalendarCarouselHeader oldWidget) {
     if (oldWidget.selectedIndex != widget.selectedIndex) {
-      mPagerController?.animateToPage(widget.selectedIndex,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      mPagerController?.jumpToPage(widget.selectedIndex);
     }
     super.didUpdateWidget(oldWidget);
   }
