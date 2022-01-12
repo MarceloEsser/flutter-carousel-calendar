@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/src/default_styles.dart'
     show defaultWeekdayTextStyle;
+import 'package:flutter_calendar_carousel/src/string_extension.dart';
 import 'package:intl/intl.dart';
 
 class WeekdayRow extends StatelessWidget {
@@ -66,7 +67,7 @@ class WeekdayRow extends StatelessWidget {
           weekDay = localeDate.dateSymbols.STANDALONEWEEKDAYS[i];
           break;
         case WeekdayFormat.short:
-          weekDay = localeDate.dateSymbols.SHORTWEEKDAYS[i];
+          weekDay = localeDate.dateSymbols.SHORTWEEKDAYS[i].capitalize();
           break;
         case WeekdayFormat.standaloneShort:
           weekDay = localeDate.dateSymbols.STANDALONESHORTWEEKDAYS[i];

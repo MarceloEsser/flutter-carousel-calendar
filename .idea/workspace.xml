@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8dbbcbcb-6c13-4d16-b7ff-9a28942ab345" name="Default Changelist" comment="better calendar height and minDate/maxDate selection">
+    <list default="true" id="8dbbcbcb-6c13-4d16-b7ff-9a28942ab345" name="Default Changelist" comment="grid scroll removed for better responsive layout">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/weekday_row.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/weekday_row.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +82,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641216175934</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="grid scroll removed for better responsive layout">
+      <created>1641477686692</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1641477686692</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -98,7 +106,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="better calendar height and minDate/maxDate selection" />
-    <option name="LAST_COMMIT_MESSAGE" value="better calendar height and minDate/maxDate selection" />
+    <MESSAGE value="grid scroll removed for better responsive layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="grid scroll removed for better responsive layout" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

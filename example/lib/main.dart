@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final List<int> completedWeeks = [52, 50, 49];
+  final List<int> completedWeeks = [1, 2, 7];
 
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final _calendarCarouselNoHeader = CalendarCarousel<Event>(
-      markedDatesMap: _markedDateMap,
+      markedDatesMap: [DateTime.now()],
       todayBorderColor: Colors.black,
       todayButtonColor: Colors.amber,
       selectedDateTime: _currentDate2,
@@ -154,7 +154,9 @@ class _MyHomePageState extends State<MyHomePage> {
       weekDayFormat: WeekdayFormat.narrow,
       locale: Platform.localeName,
       targetDateTime: _targetDateTime,
-      selectedDayButtonColor: Colors.pink,
+      selectedDayButtonColor: Colors.purpleAccent,
+      markedWeekColor: Colors.pink,
+      dayPadding: 0,
       selectedDayTextStyle: TextStyle(color: Colors.white),
       daysTextStyle: TextStyle(color: Colors.grey),
       weekendTextStyle: TextStyle(color: Colors.grey),
@@ -162,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
       onDayPressed: (date, events) {
         this.setState(() => _currentDate2 = date);
       },
-      hasCarouselHeader: true,
       boxDecoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               offset: Offset(0, 3), // changes position of shadow
             ),
           ]),
-      height: 430.0,
+      height: 450.0,
       width: 370,
       onCalendarChanged: (DateTime date) {
         this.setState(() {
