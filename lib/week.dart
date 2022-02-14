@@ -9,12 +9,12 @@ class Week {
   bool containsDay(DateTime dateTime) {
     if (days.isEmpty) return false;
 
-    for (DateTime element in days) {
+    DateTime mDateTime = days.firstWhere((element) {
       return dateTime.day == element.day &&
           dateTime.month == element.month &&
           dateTime.year == element.year;
-    }
+    });
 
-    return false;
+    return mDateTime != null;
   }
 }
