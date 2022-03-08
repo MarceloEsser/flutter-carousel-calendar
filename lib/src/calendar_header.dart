@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/src/string_extension.dart';
+import 'package:intl/intl.dart';
 import 'default_styles.dart' show defaultHeaderTextStyle;
 
 class CalendarHeader extends StatelessWidget {
@@ -16,7 +19,9 @@ class CalendarHeader extends StatelessWidget {
       this.rightButtonIcon,
       required this.onLeftButtonPressed,
       required this.onRightButtonPressed,
-      this.onHeaderTitlePressed})
+      this.onHeaderTitlePressed,
+      required this.dates,
+      required this.pageNum})
       : isTitleTouchable = onHeaderTitlePressed != null;
 
   final String headerTitle;
@@ -30,9 +35,12 @@ class CalendarHeader extends StatelessWidget {
   final VoidCallback onLeftButtonPressed;
   final VoidCallback onRightButtonPressed;
   final bool isTitleTouchable;
+  final List<DateTime> dates;
+  final int pageNum;
   final VoidCallback? onHeaderTitlePressed;
 
   TextStyle get getTextStyle => headerTextStyle ?? defaultHeaderTextStyle;
+  final String defaultLocale = Platform.localeName;
 
   Widget _leftButton() => IconButton(
         onPressed: onLeftButtonPressed,
@@ -55,22 +63,22 @@ class CalendarHeader extends StatelessWidget {
         ),
       );
 
+  String formattedDate() =>
+      '${DateFormat.MMMM(defaultLocale).format(dates[pageNum])} ${dates[pageNum].year}'
+          .capitalize();
+
   @override
   Widget build(BuildContext context) => showHeader
-      ? Container(
-          margin: headerMargin,
+      ? Container(  
           child: DefaultTextStyle(
               style: getTextStyle,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     showHeaderButtons ? _leftButton() : Container(),
                     isTitleTouchable
                         ? _headerTouchable()
-                        : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Text(headerTitle.capitalize(), style: getTextStyle),
-                        ),
+                        : Text(formattedDate(), style: getTextStyle),
                     showHeaderButtons ? _rightButton() : Container(),
                   ])),
         )

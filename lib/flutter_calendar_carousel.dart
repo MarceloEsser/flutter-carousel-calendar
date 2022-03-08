@@ -126,7 +126,7 @@ class CalendarCarousel<T extends EventInterface> extends StatefulWidget {
   final Widget? leftButtonIcon;
   final Widget? rightButtonIcon;
   final ScrollPhysics? customGridViewPhysics;
-  final Function(DateTime, int)? onCalendarChanged;
+  final Function(DateTime?, int)? onCalendarChanged;
   final String locale;
   final int? firstDayOfWeek;
   final DateTime? minSelectedDate;
@@ -325,6 +325,12 @@ class _CalendarState<T extends EventInterface>
       });
     }
 
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      if (widget.onCalendarChanged != null) {
+        widget.onCalendarChanged!(null, this.totalItemCount);
+      }
+    });
+
     _height = widget.height;
 
     _calendarHeightAnimations();
@@ -338,14 +344,14 @@ class _CalendarState<T extends EventInterface>
 
   @override
   void didUpdateWidget(CalendarCarousel<T> oldWidget) {
-    if(widget.height != _height) {
+    if (widget.height != _height) {
       _height = widget.height;
     }
     if (widget.targetDateTime != null && widget.targetDateTime != _targetDate) {
       targetDateTimeTravelControl();
-      _setDatesAndWeeks();
-      _init();
-      _setDate(_pageNum);
+      // _setDatesAndWeeks();
+      // _init();
+      // _setDate(_pageNum);
     }
 
     super.didUpdateWidget(oldWidget);
@@ -455,22 +461,24 @@ class _CalendarState<T extends EventInterface>
   }
 
   Widget buildCalendarHeader() {
-    final headerText = widget.headerText;
+    String? headerText = widget.headerText;
+
     final String defaultLocale = Platform.localeName;
-    DateTime mDate = _dates[_pageNum];
+    DateTime mDate = _dates[this._pageNum];
     if (widget.targetDateTime != null) {
       mDate = widget.targetDateTime ?? DateTime.now();
     }
-    String formattedDate =
-        '${DateFormat.MMMM(defaultLocale).format(mDate)} ${mDate.year}'
-            .capitalize();
+    if (headerText == null)
+      headerText =
+          '${DateFormat.MMMM(defaultLocale).format(mDate)} ${mDate.year}'
+              .capitalize();
 
     return widget.hasCarouselHeader
         ? CalendarCarouselHeader(
             nextAndPrevTextStyle: widget.headerNextAndPrevDateStyle,
             selectedDateColor: widget.headerHighlightDateColor,
             selectedDateTextStyle: widget.headerHighlightDateStyle,
-            selectedIndex: _pageNum,
+            selectedIndex: this._pageNum,
             pageChangeListener: (index) {
               _controller.animateToPage(index,
                   duration: Duration(milliseconds: 300), curve: Curves.easeIn);
@@ -478,9 +486,11 @@ class _CalendarState<T extends EventInterface>
             dates: _dates,
           )
         : CalendarHeader(
+            pageNum: this._pageNum,
+            dates: _dates,
             showHeader: widget.showHeader,
             headerMargin: widget.headerMargin,
-            headerTitle: formattedDate,
+            headerTitle: headerText,
             headerTextStyle: widget.headerTextStyle,
             showHeaderButtons: widget.showHeaderButton,
             headerIconColor: widget.iconColor,
@@ -488,31 +498,32 @@ class _CalendarState<T extends EventInterface>
             rightButtonIcon: widget.rightButtonIcon,
             onLeftButtonPressed: () {
               if (this._pageNum > 0) _setDate(this._pageNum - 1);
-              if(widget.onLeftArrowPressed != null) {
+              if (widget.onLeftArrowPressed != null) {
                 widget.onLeftArrowPressed!(widget.staticSixWeekFormat
                     ? 42
                     : DateTime(
-                  _dates[_pageNum].year,
-                  _dates[_pageNum].month + 1,
-                  0,
-                ).day +
-                    _startWeekday +
-                    (7 - _endWeekday));
+                          _dates[_pageNum].year,
+                          _dates[_pageNum].month + 1,
+                          0,
+                        ).day +
+                        _startWeekday +
+                        (7 - _endWeekday));
               }
             },
             onRightButtonPressed: () {
-              if (this._dates.length - 1 > this._pageNum) _setDate(this._pageNum + 1);
+              if (this._dates.length - 1 > this._pageNum)
+                _setDate(this._pageNum + 1);
 
-              if(widget.onRightArrowPressed != null){
+              if (widget.onRightArrowPressed != null) {
                 widget.onRightArrowPressed!(widget.staticSixWeekFormat
                     ? 42
                     : DateTime(
-                  _dates[_pageNum].year,
-                  _dates[_pageNum].month + 1,
-                  0,
-                ).day +
-                    _startWeekday +
-                    (7 - _endWeekday));
+                          _dates[_pageNum].year,
+                          _dates[_pageNum].month + 1,
+                          0,
+                        ).day +
+                        _startWeekday +
+                        (7 - _endWeekday));
               }
             },
             onHeaderTitlePressed: widget.headerTitleTouchable
@@ -683,12 +694,15 @@ class _CalendarState<T extends EventInterface>
       });
     }
 
-    final horizontalPadding = EdgeInsets.symmetric(horizontal: 2, vertical: 5.0);
+    final horizontalPadding =
+        EdgeInsets.symmetric(horizontal: 2, vertical: 5.0);
 
     const mPadding = EdgeInsets.symmetric(horizontal: 0, vertical: 5.0);
 
     return Padding(
-      padding: markedDatesMap != null && markedDatesMap.isNotEmpty ? horizontalPadding : mPadding,
+      padding: markedDatesMap != null && markedDatesMap.isNotEmpty
+          ? horizontalPadding
+          : mPadding,
       child: GestureDetector(
         onLongPress: () => _onDayLongPressed(now),
         child: Container(
@@ -991,9 +1005,7 @@ class _CalendarState<T extends EventInterface>
   }
 
   void _onDayPressed(DateTime picked) {
-    setState(() {
-      _selectedDate = picked;
-    });
+    _selectedDate = picked;
     widget.onDayPressed?.call(picked, widget.markedDatesMap ?? const []);
   }
 
@@ -1080,6 +1092,7 @@ class _CalendarState<T extends EventInterface>
           this._targetDate = this._dates[page];
           _startWeekday = _dates[page].weekday - firstDayOfWeek;
           _endWeekday = _lastDayOfWeek(_dates[page]).weekday - firstDayOfWeek;
+
           _controller.animateToPage(page,
               duration: Duration(milliseconds: 1), curve: Threshold(0.0));
         });
@@ -1095,12 +1108,12 @@ class _CalendarState<T extends EventInterface>
             widget.staticSixWeekFormat
                 ? 42
                 : DateTime(
-              _dates[_pageNum].year,
-              _dates[_pageNum].month + 1,
-              0,
-            ).day +
-                _startWeekday +
-                (7 - _endWeekday));
+                      _dates[_pageNum].year,
+                      _dates[_pageNum].month + 1,
+                      0,
+                    ).day +
+                    _startWeekday +
+                    (7 - _endWeekday));
       }
     }
   }

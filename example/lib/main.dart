@@ -177,11 +177,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ]),
       height: 450.0,
       width: 370,
-      onCalendarChanged: (DateTime date) {
-        this.setState(() {
-          _targetDateTime = date;
-          _currentMonth = DateFormat.yMMM().format(_targetDateTime);
-        });
+      onCalendarChanged: (DateTime? date, int) {
+        _targetDateTime = date ?? DateTime.now();
       },
       onDayLongPressed: (DateTime date) {
         print('long pressed date $date');

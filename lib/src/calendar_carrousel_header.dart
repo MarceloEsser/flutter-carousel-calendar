@@ -64,7 +64,7 @@ class _CalendarCarouselHeaderState extends State<CalendarCarouselHeader>
           Center(
             child: Container(
               margin: EdgeInsets.only(bottom: 10),
-              width: 170,
+              width: 150,
               height: 45,
               decoration: BoxDecoration(
                 color: widget.selectedDateColor,
