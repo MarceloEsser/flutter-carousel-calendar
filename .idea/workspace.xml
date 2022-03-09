@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8dbbcbcb-6c13-4d16-b7ff-9a28942ab345" name="Default Changelist" comment="grid scroll removed for better responsive layout">
-      <change beforePath="$PROJECT_DIR$/.idea/flutter_calendar_carousel.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flutter_calendar_carousel.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_calendar_carousel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/calendar_carrousel_header.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/calendar_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/calendar_header.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,12 +114,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/lib/flutter_calendar_carousel.dart</url>
-          <line>1061</line>
+          <line>1062</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/lib/flutter_calendar_carousel.dart</url>
-          <line>1051</line>
+          <line>1083</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>

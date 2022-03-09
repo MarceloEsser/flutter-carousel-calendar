@@ -20,6 +20,7 @@ class CalendarHeader extends StatelessWidget {
       required this.onLeftButtonPressed,
       required this.onRightButtonPressed,
       this.onHeaderTitlePressed,
+      required this.locale,
       required this.dates,
       required this.pageNum})
       : isTitleTouchable = onHeaderTitlePressed != null;
@@ -27,6 +28,7 @@ class CalendarHeader extends StatelessWidget {
   final String headerTitle;
   final EdgeInsetsGeometry? headerMargin;
   final bool showHeader;
+  final String locale;
   final TextStyle? headerTextStyle;
   final bool showHeaderButtons;
   final Color? headerIconColor;
@@ -40,8 +42,6 @@ class CalendarHeader extends StatelessWidget {
   final VoidCallback? onHeaderTitlePressed;
 
   TextStyle get getTextStyle => headerTextStyle ?? defaultHeaderTextStyle;
-  final String defaultLocale = Platform.localeName;
-
   Widget _leftButton() => IconButton(
         onPressed: onLeftButtonPressed,
         icon:
@@ -64,12 +64,12 @@ class CalendarHeader extends StatelessWidget {
       );
 
   String formattedDate() =>
-      '${DateFormat.MMMM(defaultLocale).format(dates[pageNum])} ${dates[pageNum].year}'
+      '${DateFormat.MMMM(locale).format(dates[pageNum])} ${dates[pageNum].year}'
           .capitalize();
 
   @override
   Widget build(BuildContext context) => showHeader
-      ? Container(  
+      ? Container(
           child: DefaultTextStyle(
               style: getTextStyle,
               child: Row(

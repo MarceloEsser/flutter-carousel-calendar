@@ -487,6 +487,7 @@ class _CalendarState<T extends EventInterface>
           )
         : CalendarHeader(
             pageNum: this._pageNum,
+            locale: widget.locale,
             dates: _dates,
             showHeader: widget.showHeader,
             headerMargin: widget.headerMargin,
@@ -1092,7 +1093,6 @@ class _CalendarState<T extends EventInterface>
           this._targetDate = this._dates[page];
           _startWeekday = _dates[page].weekday - firstDayOfWeek;
           _endWeekday = _lastDayOfWeek(_dates[page]).weekday - firstDayOfWeek;
-
           _controller.animateToPage(page,
               duration: Duration(milliseconds: 1), curve: Threshold(0.0));
         });
